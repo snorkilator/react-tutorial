@@ -1,29 +1,36 @@
+//exploring how state change effects rerednering of child components
+// also trying object properties with seperate useState origins constructed within custom hook
 import './App.css';
+import { useState } from "react"
+
+
+function useCompoundState() {
+  const [a, setA] = useState("not changed")
+  const [b, setB] = useState("not changed")
+  return { a: a, b: b, setA: setA, setB: setB }
+}
 
 function App() {
+  const obj = useCompoundState()
+
+  //demonstrate objects with multiple state variables
+  // look at how it effects event updates
   return (
     <div className="App">
-      <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
+      <button onClick={() => obj.setA("changed")}>change A</button>
+      <UpdateMeA a={obj.a} />
+      <button onClick={() => obj.setB("changed")}>change B</button>
+      <UpdateMeB b={obj.b} />
     </div>
   );
+}
+function UpdateMeA(props) {
+  console.log("updateA")
+  return <p>A: {props.a}</p>
+}
+function UpdateMeB(props) {
+  console.log("updateB")
+  return <p>B: {props.b}</p>
 }
 
 export default App;
